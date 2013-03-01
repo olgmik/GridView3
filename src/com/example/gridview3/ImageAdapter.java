@@ -7,13 +7,32 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 
-public class ImageAdapter extends BaseAdapter {
+public class ImageAdapter extends BaseAdapter { 
 	
+	class people {
+		int image_name_small;
+		int image_name_large;
+		String name;
+		// constructor
+		public people(int _image_name_small, int _image_name_large, String _name){
+			image_name_small = 	_image_name_small;
+			image_name_large = 	_image_name_large;
+			name = _name;
+		}
+	}
+	private people [] peopleInfo = {
+			new people(R.drawable.olya_150, R.drawable.olya_200, "Olya Large"),
+			new people(R.drawable.olya2_150, R.drawable.olya2_200, "Olya2 Large"),
+			new people(R.drawable.olya3_150, R.drawable.olya3_200, "Olya3 Large"),
+			new people(R.drawable.olya4_150, R.drawable.olya4_200, "Olya4 Large")
+	};
+	
+	/*
 	private Integer [] photos = {
 			R.drawable.olya_150, R.drawable.olya2_150,
 			R.drawable.olya3_150, R.drawable.olya4_150
 	}; 
-	
+	*/
 	private Context mContext;
 	public ImageAdapter(Context c){
 		mContext=c;
@@ -22,7 +41,7 @@ public class ImageAdapter extends BaseAdapter {
 	@Override
 	public int getCount() {
 		// TODO Auto-generated method stub
-		return photos.length;
+		return peopleInfo.length;
 	}
 
 	@Override
@@ -36,7 +55,7 @@ public class ImageAdapter extends BaseAdapter {
 		// TODO Auto-generated method stub
 		return 0;
 	}
-
+	// here we are setting which image will go into which cell of the gridView
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ImageView imageView;
@@ -48,7 +67,7 @@ public class ImageAdapter extends BaseAdapter {
         } else {
             imageView = (ImageView) convertView;
         }
-        imageView.setImageResource(photos[position]);
+        imageView.setImageResource(peopleInfo[position].image_name_small);
         return imageView;
 	}	
 }

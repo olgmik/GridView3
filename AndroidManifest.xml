@@ -23,7 +23,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.example.gridview3.SecondActivity"
+            android:name="com.example.gridview3.DisplayMessage"
             android:label="@string/title_activity_second" >
         </activity>
     </application>
