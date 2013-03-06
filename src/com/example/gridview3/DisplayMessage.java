@@ -2,34 +2,41 @@ package com.example.gridview3;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.webkit.WebView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 //import android.widget.Toast;
 
 public class DisplayMessage extends Activity implements OnClickListener {
 
+		private WebView webView; 
+
 	class people {
 		int image_name_small;
 		int image_name_large;
 		String name;
+		String url; 
 		// constructor
-		public people(int _image_name_small, int _image_name_large, String _name){
+		public people(int _image_name_small, int _image_name_large, String _name, String _url){
 			image_name_small = 	_image_name_small;
 			image_name_large = 	_image_name_large;
 			name = _name;
+			url=_url;
 		}
 	}
 	// create an array of class PEOPLE, lets call this array peopleInfo
 	// cause it will hold each person's photos and name
 	private people [] peopleInfo = {
-			new people(R.drawable.olya_150, R.drawable.olya_200, "Olya Large"),
-			new people(R.drawable.olya2_150, R.drawable.olya2_200, "Olya2 Large"),
-			new people(R.drawable.olya3_150, R.drawable.olya3_200, "Olya3 Large"),
-			new people(R.drawable.olya4_150, R.drawable.olya4_200, "Olya4 Large")
+			new people(R.drawable.olya_150, R.drawable.olya_200, "Olya Large", "http://www.cargocollective.com/olya"),
+			new people(R.drawable.olya2_150, R.drawable.olya2_200, "Olya2 Large", "http://www.google.com"),
+			new people(R.drawable.olya3_150, R.drawable.olya3_200, "Olya3 Large", "http://www.nyu.com"),
+			new people(R.drawable.olya4_150, R.drawable.olya4_200, "Olya4 Large", "http://youtube.com")
 	};
 	
 	ImageView imageView;
@@ -48,6 +55,7 @@ public class DisplayMessage extends Activity implements OnClickListener {
 	    	
 		// --- 5) This var will go into setImageResource ---//
 		int myImage = peopleInfo[indexOfFileName].image_name_large;
+		final String myUrl = peopleInfo[indexOfFileName].url;
 		
 		// --- 2) Standard procedure - instantiate imageView (declared right before onCreate)
 		imageView = (ImageView) this.findViewById(R.id.imageView1);
@@ -64,6 +72,23 @@ public class DisplayMessage extends Activity implements OnClickListener {
 		textView.setTextSize(40);
 		// this is the same procedure, only setting text, and we don't make a var for an argument
 		textView.setText(peopleInfo[indexOfFileName].name);
+		
+		Button button = (Button) this.findViewById(R.id.button1);
+		
+		
+		button.setOnClickListener(new View.OnClickListener() {
+	
+			@Override
+			public void onClick(View v) {
+				Intent i = new Intent(Intent.ACTION_VIEW, 
+						Uri.parse(myUrl));
+				// setContentView(R.layout.webview);	
+				startActivity(i);
+			}
+		});
+		this.webView = (WebView)this.findViewById(R.id.webView1);
+		
+		this.webView.loadUrl(myUrl); 
 						
 	}
 
