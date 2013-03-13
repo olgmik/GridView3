@@ -9,22 +9,11 @@ import android.widget.ImageView;
 
 public class ImageAdapter extends BaseAdapter { 
 	
-	class people {
-		int image_name_small;
-		int image_name_large;
-		String name;
-		// constructor
-		public people(int _image_name_small, int _image_name_large, String _name){
-			image_name_small = 	_image_name_small;
-			image_name_large = 	_image_name_large;
-			name = _name;
-		}
-	}
 	private people [] peopleInfo = {
-			new people(R.drawable.olya_150, R.drawable.olya_200, "Olya Large"),
-			new people(R.drawable.olya2_150, R.drawable.olya2_200, "Olya2 Large"),
-			new people(R.drawable.olya3_150, R.drawable.olya3_200, "Olya3 Large"),
-			new people(R.drawable.olya4_150, R.drawable.olya4_200, "Olya4 Large")
+			new people(R.drawable.olya_150, R.drawable.olya_200, "Olya Large",""),
+			new people(R.drawable.olya2_150, R.drawable.olya2_200, "Olya2 Large",""),
+			new people(R.drawable.olya3_150, R.drawable.olya3_200, "Olya3 Large",""),
+			new people(R.drawable.olya4_150, R.drawable.olya4_200, "Olya4 Large","")
 	};
 	
 	/*

@@ -17,22 +17,9 @@ public class DisplayMessage extends Activity implements OnClickListener {
 
 		private WebView webView; 
 
-	class people {
-		int image_name_small;
-		int image_name_large;
-		String name;
-		String url; 
-		// constructor
-		public people(int _image_name_small, int _image_name_large, String _name, String _url){
-			image_name_small = 	_image_name_small;
-			image_name_large = 	_image_name_large;
-			name = _name;
-			url=_url;
-		}
-	}
 	// create an array of class PEOPLE, lets call this array peopleInfo
 	// cause it will hold each person's photos and name
-	private people [] peopleInfo = {
+	public people [] peopleInfo = {
 			new people(R.drawable.olya_150, R.drawable.olya_200, "Olya Large", "http://www.cargocollective.com/olya"),
 			new people(R.drawable.olya2_150, R.drawable.olya2_200, "Olya2 Large", "http://www.google.com"),
 			new people(R.drawable.olya3_150, R.drawable.olya3_200, "Olya3 Large", "http://www.nyu.com"),
@@ -86,10 +73,8 @@ public class DisplayMessage extends Activity implements OnClickListener {
 				startActivity(i);
 			}
 		});
-		this.webView = (WebView)this.findViewById(R.id.webView1);
-		
-		this.webView.loadUrl(myUrl); 
-						
+		this.webView = (WebView)this.findViewById(R.id.webView1);		
+		this.webView.loadUrl(myUrl); 						
 	}
 
 	@Override
