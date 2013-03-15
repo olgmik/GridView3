@@ -50,6 +50,17 @@
         android:textSize = "15sp"
         android:hint="@string/edit_Url" 
         />
+    
+    <EditText
+        android:id="@+id/editSkills"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:textSize = "15sp"
+        android:hint="@string/edit_skills" 
+        />
 
     <Button
         android:id="@+id/button_photo"

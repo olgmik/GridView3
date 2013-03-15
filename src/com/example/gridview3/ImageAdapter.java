@@ -10,10 +10,10 @@ import android.widget.ImageView;
 public class ImageAdapter extends BaseAdapter { 
 	
 	private people [] peopleInfo = {
-			new people(R.drawable.olya_150, R.drawable.olya_200, "Olya Large",""),
-			new people(R.drawable.olya2_150, R.drawable.olya2_200, "Olya2 Large",""),
-			new people(R.drawable.olya3_150, R.drawable.olya3_200, "Olya3 Large",""),
-			new people(R.drawable.olya4_150, R.drawable.olya4_200, "Olya4 Large","")
+			new people(R.drawable.olya_150, R.drawable.olya_200, "Olya Large","url"),
+			new people(R.drawable.olya2_150, R.drawable.olya2_200, "Olya2 Large","url"),
+			new people(R.drawable.olya3_150, R.drawable.olya3_200, "Olya3 Large","url"),
+			new people(R.drawable.olya4_150, R.drawable.olya4_200, "Olya4 Large","url")
 	};
 	
 	/*

@@ -1,8 +1,22 @@
 package com.example.gridview3;
 
 import java.io.File;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.app.Activity;
@@ -20,6 +34,8 @@ public class Welcome extends Activity {
 	String imageFilePath;
 	Button takePhoto;
 	Button saveAll;
+	List<NameValuePair> nvps;
+	// pairs list
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +43,7 @@ public class Welcome extends Activity {
 		setContentView(R.layout.activity_welcome);
 		takePhoto = (Button) findViewById(R.id.button_photo);
 		saveAll = (Button) findViewById(R.id.button_save_all);
+		
 	}
 	
 	public void takePhoto(View clickedView){
@@ -44,9 +61,18 @@ public class Welcome extends Activity {
 		}	
 		
 		if(clickedView == saveAll){
-			// bundle up contents of EditName, EditEmail, EditUrl and Photo credentials
-			// and send to the database
-			// + populate grid view
+			// put the list of key value pairs
+			List<NameValuePair> nvps = new ArrayList <NameValuePair>();
+			nvps.add(new BasicNameValuePair("name", "blah"));
+			nvps.add(new BasicNameValuePair("email", "blah@bla"));
+			nvps.add(new BasicNameValuePair("url", "http://blah"));
+			nvps.add(new BasicNameValuePair("skills", "http://blah"));
+
+			// create PostJason
+			PostJSON send = new PostJSON("http://myflashcards111.herokuapp.com/create/", nvps);
+			
+			// call execute method
+			send.execute();
 		}
 	}	
 	// Camera application encodes the photo in the return Intent delivered to 
@@ -63,4 +89,127 @@ public class Welcome extends Activity {
 			imageView.setImageBitmap(bmp);						
 		}
 	}
+	
+	// class PostJASON	
+	class PostJSON extends AsyncTask<Void, Void, String>{
+		private String url;
+		private List<NameValuePair> nvps ;
+		
+		public PostJSON(String _url, List<NameValuePair> _nvps ) {
+			url = _url;
+			nvps = _nvps;
+		}	
+
+		@Override
+		protected String doInBackground(Void... params) {
+			String responseString = null;
+			
+			HttpClient httpclient = new DefaultHttpClient();
+		    HttpPost httpPost = new HttpPost(url);
+			try {
+		       //httpPost.setEntity(new StringEntity(json));
+				
+				httpPost.setEntity(new UrlEncodedFormEntity(nvps));
+		       
+		       //httpPost.setHeader("Accept", "application/json");
+		       //httpPost.setHeader("Content-type", "application/json");
+		       		       
+		       HttpResponse response = httpclient.execute(httpPost);
+		       HttpEntity responseEntity = response.getEntity();
+		       responseString = EntityUtils.toString(responseEntity);
+		       
+		   } catch (IOException e) {
+		       e.printStackTrace();
+		   }			
+			return responseString;
+		}
+		
+		@Override
+       protected void onProgressUpdate(Void... values) {
+       }
+		
+		@Override
+       protected void onPostExecute(String result) {
+			Log.v(LOGTAG, result);
+       }		
+	}	
+	// my server for POSTJasonSend is http://myflashcards111.herokuapp.com/create/
+	// new URL encode entity, change arg to nvps
+	// Request the JSON and do the parsing in the background
+			RequestJSON request = new RequestJSON();
+			request.execute(new String[] { twitterURL });
+
+		class RequestJSON extends AsyncTask<String, Void, String>
+		{
+
+			@Override
+			protected String doInBackground(String... urls) {
+				String jsonString = "";
+
+				// Here is the setup of our network request, we create an HttpClient and an HttpGet request object with the URL.
+				DefaultHttpClient client = new DefaultHttpClient();
+				HttpGet getRequest = new HttpGet(urls[0]);
+
+				try {
+				
+					// Once we execute the request, we get an HttpResponse
+					HttpResponse getResponse = client.execute(getRequest);
+					
+					// If the status is OK then we move on.
+					final int statusCode = getResponse.getStatusLine().getStatusCode();
+					if (statusCode == HttpStatus.SC_OK) { 
+						
+						// Get the content of the response as an InputStream and construct a reader
+		       	  HttpEntity getResponseEntity = getResponse.getEntity();
+		       	  InputStream inputStream = getResponseEntity.getContent();
+		              
+		              // Create a BufferedReader and StringBuilder to read form the stream and output a String
+		              // Technically we could just hand gson the reader object but I thought this was a valuable example
+		              BufferedReader bufferedreader = new BufferedReader(new InputStreamReader(inputStream));
+		              StringBuilder stringbuilder = new StringBuilder();
+		       
+		              String currentline = null;
+		              
+		              try {
+		                  while ((currentline = bufferedreader.readLine()) != null) {
+		                  	stringbuilder.append(currentline + "\n");
+		                  }
+		              } catch (IOException e) {
+		                  e.printStackTrace();
+		              }
+		              
+		              // Here is the resulting string
+		              jsonString = stringbuilder.toString();
+		              //Log.v("HTTP REQUEST",result);
+		              inputStream.close();  
+					}
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				
+				return jsonString;
+			}
+			
+			@Override
+	       protected void onProgressUpdate(Void... values) {
+	       }
+			
+			@Override
+	       protected void onPostExecute(String result) {
+		      // Create the Gson object and pass in the JSON
+		      // In this case, we are receiving an array and we want to cast it to an array of "TwitterFeed" objects
+		      // See below for the definition of a "TwitterFeed"
+			  //Gson gson = new Gson();
+		      //TwitterFeed[] responses = gson.fromJson(result, TwitterFeed[].class);
+		      
+		      // Print out the results
+			
+		     // for (int i = 0; i < responses.length; i++) {
+		   //	  Log.v(LOGTAG,responses[i].text);
+		     // }
+		      
+		      Log.v(LOGTAG,jsonString);
+		      
+	       }			
+		}		
 }
