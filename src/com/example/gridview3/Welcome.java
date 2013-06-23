@@ -1,12 +1,16 @@
 package com.example.gridview3;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -14,6 +18,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
 
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -23,6 +28,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
@@ -105,39 +111,32 @@ public class Welcome extends Activity {
 			String responseString = null;
 			
 			HttpClient httpclient = new DefaultHttpClient();
-		    HttpPost httpPost = new HttpPost(url);
-			try {
-		       //httpPost.setEntity(new StringEntity(json));
-				
+			HttpPost httpPost = new HttpPost(url);
+			try {				
 				httpPost.setEntity(new UrlEncodedFormEntity(nvps));
-		       
-		       //httpPost.setHeader("Accept", "application/json");
-		       //httpPost.setHeader("Content-type", "application/json");
-		       		       
-		       HttpResponse response = httpclient.execute(httpPost);
-		       HttpEntity responseEntity = response.getEntity();
-		       responseString = EntityUtils.toString(responseEntity);
-		       
-		   } catch (IOException e) {
-		       e.printStackTrace();
-		   }			
+				HttpResponse response = httpclient.execute(httpPost);
+				HttpEntity responseEntity = response.getEntity();
+				responseString = EntityUtils.toString(responseEntity);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}			
 			return responseString;
 		}
 		
 		@Override
-       protected void onProgressUpdate(Void... values) {
-       }
+		protected void onProgressUpdate(Void... values) {
+		}
 		
-		@Override
-       protected void onPostExecute(String result) {
-			Log.v(LOGTAG, result);
-       }		
+		protected void onPostExecute(String result) {
+			Log.v("RESULT", result);
+		}
 	}	
 	// my server for POSTJasonSend is http://myflashcards111.herokuapp.com/create/
 	// new URL encode entity, change arg to nvps
 	// Request the JSON and do the parsing in the background
-			RequestJSON request = new RequestJSON();
-			request.execute(new String[] { twitterURL });
+		
+	//RequestJSON request = new RequestJSON();
+	//request.execute(new String[] { twitterURL });
 
 		class RequestJSON extends AsyncTask<String, Void, String>
 		{
@@ -160,28 +159,23 @@ public class Welcome extends Activity {
 					if (statusCode == HttpStatus.SC_OK) { 
 						
 						// Get the content of the response as an InputStream and construct a reader
-		       	  HttpEntity getResponseEntity = getResponse.getEntity();
-		       	  InputStream inputStream = getResponseEntity.getContent();
-		              
-		              // Create a BufferedReader and StringBuilder to read form the stream and output a String
-		              // Technically we could just hand gson the reader object but I thought this was a valuable example
-		              BufferedReader bufferedreader = new BufferedReader(new InputStreamReader(inputStream));
-		              StringBuilder stringbuilder = new StringBuilder();
-		       
-		              String currentline = null;
-		              
-		              try {
-		                  while ((currentline = bufferedreader.readLine()) != null) {
-		                  	stringbuilder.append(currentline + "\n");
-		                  }
-		              } catch (IOException e) {
-		                  e.printStackTrace();
-		              }
-		              
-		              // Here is the resulting string
-		              jsonString = stringbuilder.toString();
-		              //Log.v("HTTP REQUEST",result);
-		              inputStream.close();  
+						HttpEntity getResponseEntity = getResponse.getEntity();
+						InputStream inputStream = getResponseEntity.getContent();
+
+						BufferedReader bufferedreader = new BufferedReader(new InputStreamReader(inputStream));
+						StringBuilder stringbuilder = new StringBuilder();
+						String currentline = null;
+
+						try {
+							while ((currentline = bufferedreader.readLine()) != null) {
+								stringbuilder.append(currentline + "\n");
+							}
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+						jsonString = stringbuilder.toString();
+		
+						inputStream.close();
 					}
 				} catch (IOException e) {
 					e.printStackTrace();
@@ -191,25 +185,11 @@ public class Welcome extends Activity {
 			}
 			
 			@Override
-	       protected void onProgressUpdate(Void... values) {
-	       }
+			protected void onProgressUpdate(Void... values) {
+			}
 			
 			@Override
-	       protected void onPostExecute(String result) {
-		      // Create the Gson object and pass in the JSON
-		      // In this case, we are receiving an array and we want to cast it to an array of "TwitterFeed" objects
-		      // See below for the definition of a "TwitterFeed"
-			  //Gson gson = new Gson();
-		      //TwitterFeed[] responses = gson.fromJson(result, TwitterFeed[].class);
-		      
-		      // Print out the results
-			
-		     // for (int i = 0; i < responses.length; i++) {
-		   //	  Log.v(LOGTAG,responses[i].text);
-		     // }
-		      
-		      Log.v(LOGTAG,jsonString);
-		      
-	       }			
+			protected void onPostExecute(String result) {		
+			}			
 		}		
 }
